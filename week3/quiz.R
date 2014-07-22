@@ -40,7 +40,7 @@ gdprankings <- gdprankings[1:190,] ## Remove regions - just keep countries
 gdprankings[,2] <- as.numeric(gdprankings[,2])
 gdprankings[,4] <- gsub(",", "", gdprankings[,4]) # Remove "," to allow coercion
 gdprankings[,4] <- as.integer(gdprankings[,4])
-gdprankings <- gdprankings[order(gdp[,2], ] ## Order by "gdp" descending
+gdprankings <- gdprankings[order(gdp[,2]), ] ## Order by "gdp" descending
 gdprankings[1:13,]
 
 # 4. What is the average GDP ranking for the "High income: OECD" and "High
@@ -51,7 +51,9 @@ res1 <- mean(mergeddata[mergeddata$Income.Group=="High income: OECD",]$ranking)
 res2 <- mean(mergeddata[mergeddata$Income.Group=="High income: nonOECD",]$ranking)
 ans <- c(res1, res2)
 
-# 5. Cut the GDP ranking into 5 separate quantile groups. Make a table versus
-# Income.Group. How many countries are Lower middle income but among the 38
+# 5. How many countries are Lower middle income but among the 38
 # nations with highest GDP?
-quantile(x = mergeddata$gdp, probs=c(0.2,0.4,0.6,0.8,1))
+quantiles <- quantile(x = mergeddata$gdp, probs=c(0.2,0.4,0.6,0.8,1))
+topQuantileRange <- quantiles[4]
+data <- mergeddata[mergeddata$Income.Group=="Lower middle income" & mergeddata$gdp > topQuantileRange,]
+ans <- nrow(data)
